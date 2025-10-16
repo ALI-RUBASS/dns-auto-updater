@@ -29,9 +29,13 @@ try:
 except requests.RequestException:
     server_up = False
 
+if server_up:
+    print(f"Primary server {check_url} is UP.")
+else:
+    print(f"Primary server {check_url} is DOWN.")
+
 # Decide which IP to set
 new_ip = PRIMARY_IP if server_up else FAILOVER_IP
-print(f"Primary server up: {server_up}. DNS will be set to {new_ip}")
 
 # ---------------- FETCH EXISTING A RECORD ----------------
 url = f"https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records?type=A&name={RECORD_NAME}"
@@ -50,8 +54,12 @@ record_id = record["id"]
 current_ip = record["content"]
 proxied_status = record.get("proxied", False)
 
+# ---------------- UPDATE LOGIC ----------------
 if current_ip == new_ip:
-    print(f"DNS IP is already {current_ip}. No update needed.")
+    if server_up:
+        print("No DNS update needed. Primary IP is already set.")
+    else:
+        print(f"DNS is already pointing to backup IP {FAILOVER_IP}.")
     sys.exit(0)
 
 # ---------------- UPDATE DNS RECORD ----------------
@@ -71,6 +79,9 @@ except requests.RequestException as e:
     sys.exit(1)
 
 if update_res.get("success"):
-    print(f"DNS successfully updated from {current_ip} → {new_ip}")
+    if server_up:
+        print(f"Primary server is UP. DNS updated to {PRIMARY_IP} (was {current_ip}).")
+    else:
+        print(f"Primary server is DOWN. DNS updated to backup IP {FAILOVER_IP} (was {current_ip}).")
 else:
     print("Failed to update DNS:", update_res)
