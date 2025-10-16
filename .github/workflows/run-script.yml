@@ -1,9 +1,9 @@
 name: Cloudflare DNS Updater
 
 on:
+  workflow_dispatch:  # allows manual runs anytime
   schedule:
-    - cron: "* * * * *" # every minute (60 seconds)
-  workflow_dispatch:
+    - cron: "*/5 * * * *"  # runs every 5 minutes (GitHub minimum interval)
 
 jobs:
   update-dns:
