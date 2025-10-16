@@ -1,23 +1,26 @@
-name: Cloudflare DNS Updater
+name: Cloudflare DNS Failover
 
 on:
-  workflow_dispatch:  # allows manual runs anytime
+  workflow_dispatch:        # manual trigger
   schedule:
-    - cron: "*/5 * * * *"  # runs every 5 minutes (GitHub minimum interval)
+    - cron: "*/5 * * * *"  # every 5 minutes
 
 jobs:
-  update-dns:
+  dns-failover:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          php-version: '8.2'
+          python-version: "3.11"
 
-      - name: Run Cloudflare DNS updater
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run DNS failover script
         env:
           CF_TOKEN: ${{ secrets.CF_TOKEN }}
-        run: php script.php
+        run: python dns_failover.py
