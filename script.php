@@ -3,7 +3,7 @@
 // Cloudflare DNS Auto-Updater
 // Updates A record of themavennest.shop to current server IP
 
-$zone_id = "YOUR_ZONE_ID"; // Replace with your Cloudflare Zone ID
+$zone_id = "1ccb28f8be8421a2b3e467bd53f54258"; // Replace with your Cloudflare Zone ID
 $record_name = "themavennest.shop";
 $new_ip = "91.99.219.182"; // or dynamically fetch if needed
 $api_token = getenv('CF_TOKEN'); // From GitHub Secret
