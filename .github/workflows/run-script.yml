@@ -1,12 +1,12 @@
-name: Run DNS Update
+name: Cloudflare DNS Updater
 
 on:
   schedule:
-    - cron: "0 * * * *"  # runs every hour
-  workflow_dispatch:     # allows manual trigger
+    - cron: "* * * * *" # every minute (60 seconds)
+  workflow_dispatch:
 
 jobs:
-  run-script:
+  update-dns:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,5 +17,7 @@ jobs:
         with:
           php-version: '8.2'
 
-      - name: Run PHP script
+      - name: Run Cloudflare DNS updater
+        env:
+          CF_TOKEN: ${{ secrets.CF_TOKEN }}
         run: php script.php
