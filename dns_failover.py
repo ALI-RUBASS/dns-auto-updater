@@ -7,7 +7,7 @@ ZONE_ID = "1ccb28f8be8421a2b3e467bd53f54258"
 RECORD_NAME = "themavennest.shop"
 PRIMARY_IP = "91.99.219.182"
 FAILOVER_IP = "91.98.125.83"
-CHECK_PORT = 9100
+CHECK_PORT = 0
 TIMEOUT = 5  # seconds
 
 # ---------------- TOKEN VALIDATION ----------------
