@@ -7,7 +7,7 @@ ZONE_ID = "1ccb28f8be8421a2b3e467bd53f54258"
 RECORD_NAME = "themavennest.shop"
 PRIMARY_IP = "91.99.219.182"
 FAILOVER_IP = "91.98.125.83"
-CHECK_PORT = 0
+CHECK_PORT = 9100  # use actual port to check server
 TIMEOUT = 5  # seconds
 
 # ---------------- TOKEN VALIDATION ----------------
@@ -52,7 +52,6 @@ if not res.get("success") or len(res.get("result", [])) == 0:
 record = res["result"][0]
 record_id = record["id"]
 current_ip = record["content"]
-proxied_status = record.get("proxied", False)
 
 # ---------------- UPDATE LOGIC ----------------
 if current_ip == new_ip:
@@ -68,8 +67,8 @@ payload = {
     "type": "A",
     "name": RECORD_NAME,
     "content": new_ip,
-    "ttl": 1,  # Auto
-    "proxied": proxied_status
+    "ttl": 60,       # minimum 1 minute
+    "proxied": False # keep proxied OFF
 }
 
 try:
