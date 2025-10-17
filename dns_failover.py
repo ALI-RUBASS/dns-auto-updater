@@ -7,8 +7,8 @@ ZONE_ID = "1ccb28f8be8421a2b3e467bd53f54258"
 RECORD_NAME = "themavennest.shop"
 PRIMARY_IP = "91.99.219.182"
 FAILOVER_IP = "91.98.125.83"
-CHECK_PORT = 0  # use actual port to check server
-TIMEOUT = 5  # seconds
+CHECK_PORT = 80      # use actual port to check server (0 is invalid)
+TIMEOUT = 5          # seconds
 
 # ---------------- TOKEN VALIDATION ----------------
 CF_TOKEN = os.environ.get("CF_TOKEN", "").strip()
@@ -30,9 +30,9 @@ except requests.RequestException:
     server_up = False
 
 if server_up:
-    print(f"Primary server {check_url} is UP.")
+    print(f"Primary server {PRIMARY_IP} is UP.")
 else:
-    print(f"Primary server {check_url} is DOWN.")
+    print(f"Primary server {PRIMARY_IP} is DOWN.")
 
 # Decide which IP to set
 new_ip = PRIMARY_IP if server_up else FAILOVER_IP
@@ -67,8 +67,8 @@ payload = {
     "type": "A",
     "name": RECORD_NAME,
     "content": new_ip,
-    "ttl": 60,       # minimum 1 minute
-    "proxied": False # keep proxied OFF
+    "ttl": 1,       # Auto TTL
+    "proxied": True # Enable Cloudflare proxy
 }
 
 try:
